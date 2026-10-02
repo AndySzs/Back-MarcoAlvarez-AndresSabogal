@@ -1,6 +1,14 @@
 server:
   port: 8080
 
+spring:
+  application:
+    name: blueprints-rt-back
+
+app:
+  # Origenes permitidos para CORS (/api/**) y el handshake WebSocket (/ws-blueprints), separados por coma
+  allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173,http://127.0.0.1:5173}
+
 management:
   endpoints:
     web:
@@ -9,3 +17,11 @@ management:
   endpoint:
     health:
       show-details: never
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    co.edu.eci.blueprints: INFO

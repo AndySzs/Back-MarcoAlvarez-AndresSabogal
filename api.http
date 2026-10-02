@@ -1,0 +1,83 @@
+### BluePrints RT - ejemplos REST (IntelliJ HTTP Client / VS Code REST Client)
+@host = http://localhost:8080
+@base = {{host}}/api/v1/blueprints
+
+### Todos los planos
+GET {{base}}
+
+### Planos de un autor (query param)
+GET {{base}}?author=juan
+
+### Planos de un autor (path)
+GET {{base}}/juan
+
+### Un plano
+GET {{base}}/juan/plano-1
+
+### Ruta alternativa sin version
+GET {{host}}/api/blueprints/juan/plano-1
+
+### Plano inexistente -> 404
+GET {{base}}/juan/no-existe
+
+### Crear plano -> 201
+POST {{base}}
+Content-Type: application/json
+
+{
+  "author": "marco",
+  "name": "sala",
+  "points": [ { "x": 10, "y": 10 }, { "x": 200, "y": 10 }, { "x": 200, "y": 150 } ]
+}
+
+### Crear el mismo plano otra vez -> 409
+POST {{base}}
+Content-Type: application/json
+
+{
+  "author": "marco",
+  "name": "sala",
+  "points": []
+}
+
+### Crear con datos invalidos -> 400 (mensaje por campo)
+POST {{base}}
+Content-Type: application/json
+
+{
+  "author": "nombre con espacios",
+  "name": "",
+  "points": [ { "x": 99999, "y": 0 } ]
+}
+
+### JSON mal formado -> 400
+POST {{base}}
+Content-Type: application/json
+
+{ "author": "marco"}
+
+### Reemplazar todos los puntos -> 200 (publica type "replace")
+PUT {{base}}/marco/sala
+Content-Type: application/json
+
+{
+  "points": [ { "x": 50, "y": 50 }, { "x": 300, "y": 300 } ]
+}
+
+### Agregar un punto -> 202 (publica type "points")
+PUT {{base}}/marco/sala/points
+Content-Type: application/json
+
+{ "x": 420, "y": 250 }
+
+### Eliminar -> 200 (publica type "deleted")
+DELETE {{base}}/marco/sala
+
+### Eliminar otra vez -> 404
+DELETE {{base}}/marco/sala
+
+### Health check
+GET {{host}}/actuator/health
+
+### OpenAPI (JSON). Swagger UI: http://localhost:8080/swagger-ui.html
+GET {{host}}/v3/api-docs
